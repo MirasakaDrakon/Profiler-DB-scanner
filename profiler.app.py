@@ -1,4 +1,5 @@
-
+# PROFILER DB PARSER BY DRAK0N
+# https://github.com/MirasakaDrakon
 import queue
 import os
 import re
@@ -428,7 +429,6 @@ def main():
     clues = get_clues()
     clues_norm = [fast_normalize(c) if CONFIG["USE_FAST_NORMALIZE"] else c.lower() for c in clues]
     log_file = init_log(clues)
-    log_file = init_log(clues)
 
     # Запуск потока-логгера
     log_thread = threading.Thread(target=log_writer_thread, args=(log_file,), daemon=True)
@@ -439,7 +439,7 @@ def main():
     table_count, file_count = 0, 0
     if os.path.exists(CONFIG["DB_PATH"]):
         try:
-            conn = sqlite3.connect(CONFIG["DB_PATH"])
+            conn = sqlite3.connect(CONFIG["DB_PATH"],check_same_thread=False)
             cur = conn.cursor()
             cur.execute("SELECT COUNT(*) FROM sqlite_master WHERE type='table';")
             table_count = cur.fetchone()[0] or 0
@@ -519,3 +519,4 @@ if __name__ == "__main__":
         center_print(Colorate.Horizontal(Colors.red_to_purple, "\n[!] PROFILER INTERRUPTED BY USER"))
     except Exception as e:
         center_print(Colorate.Horizontal(Colors.red_to_purple, f"\n[ERROR] Unexpected error: {e}"))
+        
